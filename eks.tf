@@ -45,7 +45,7 @@ resource "aws_eks_cluster" "demo" {
   }
 }
 
-resource "aws_eks_node_group" "example" {
+resource "aws_eks_node_group" "demo" {
   cluster_name    = aws_eks_cluster.demo.name
   node_group_name = "demo"
   node_role_arn   = aws_iam_role.eksdemo.arn
@@ -60,5 +60,35 @@ resource "aws_eks_node_group" "example" {
   update_config {
     max_unavailable = 1
   }
-
 }
+
+
+
+resource "aws_eks_cluster" "app" {
+  name     = "app"
+  role_arn = aws_iam_role.eksdemo.arn
+
+  vpc_config {
+    subnet_ids              = module.vpc.private_subnets
+    endpoint_private_access = true
+    endpoint_public_access  = false
+  }
+}
+
+resource "aws_eks_node_group" "app" {
+  cluster_name    = aws_eks_cluster.app.name
+  node_group_name = "app"
+  node_role_arn   = aws_iam_role.eksdemo.arn
+  subnet_ids      = module.vpc.private_subnets
+
+  scaling_config {
+    desired_size = 1
+    max_size     = 2
+    min_size     = 1
+  }
+
+  update_config {
+    max_unavailable = 1
+  }
+}
+

@@ -16,5 +16,5 @@ spec:
     spec:
       containers:
         - name: tfc-agent
-          image: "hashicorp/tfc-agent:1.7.0"
+          image: "public.ecr.aws/e1e3h8j6/custom-tfc-agent:latest"
 
